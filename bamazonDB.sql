@@ -9,4 +9,5 @@ CREATE TABLE products (
     category VARCHAR(50) NULL,
     price DECIMAL(10,2) NULL,
     quantity INTEGER(10) NULL,
+    PRIMARY KEY (id)
 );
