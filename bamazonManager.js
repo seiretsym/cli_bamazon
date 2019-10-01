@@ -69,7 +69,7 @@ function init() {
 // gets inventory data and prints it
 function showInventory() {
     // get products
-    var query = connection.query("SELECT * FROM products", function(err, res) {
+    connection.query("SELECT * FROM products", function(err, res) {
         // error stuffs!
         if (err) {
             // log error and close connection;
@@ -102,7 +102,7 @@ function showInventory() {
 // gets inventory data and prints products that are low
 function showLowInventory() {
     // query database
-    var query = connection.query("SELECT * FROM products WHERE ?",
+    connection.query("SELECT * FROM products WHERE ?",
     {
         quantity: 0
     },
@@ -143,7 +143,7 @@ function showLowInventory() {
 // add inventory to a product
 function addInventory() {
     // show list of items
-    var query = connection.query("SELECT * FROM products", function(err, res) {
+    connection.query("SELECT * FROM products", function(err, res) {
         // error stuffs!
         if (err) {
             // log error and close connection;
@@ -170,6 +170,7 @@ function addInventory() {
             // re-init
         }
 
+        // prompt user for item ID
         inquirer.prompt([
             {
                 type: "input",
@@ -190,7 +191,7 @@ function addInventory() {
                 quit()
             } else {
                 // check if item exists
-                var query = connection.query("SELECT * FROM products WHERE ?",
+                connection.query("SELECT * FROM products WHERE ?",
                 {
                     id: res.id
                 },
@@ -203,11 +204,11 @@ function addInventory() {
                     // item doesn't exist so...
                     else if (qRes.length < 1) {
                         // tell them
-                        console.log("Cannot find an item with the ID: " + res.id)
+                        console.log("\nCannot find an item with the ID: " + res.id + "\n")
                         // re-init
                         init()
                     } else {
-                        // ask for input to replenish the stock
+                        // prompt user for amount
                         inquirer.prompt([
                             {
                                 type: "input",
@@ -231,7 +232,7 @@ function addInventory() {
                                 // add new amount to current amount
                                 var newAmount = parseInt(qRes[0].quantity) + parseInt(iRes.amount);
                                 // push to database
-                                var query = connection.query("UPDATE products SET ? WHERE ?",
+                                connection.query("UPDATE products SET ? WHERE ?",
                                 [
                                     {
                                         quantity: newAmount
@@ -247,7 +248,7 @@ function addInventory() {
                                         quit();
                                     } else {
                                         // let them know
-                                        console.log(res2.affectedRows + " item quantity updated!");
+                                        console.log("\n" + res2.affectedRows + " item quantity updated!\n");
                                         // re-init
                                         init();
                                     }
@@ -308,7 +309,7 @@ function addProduct() {
             quit();
         } else {
             // add product to database
-            var query = connection.query("INSERT INTO products SET ?",
+            connection.query("INSERT INTO products SET ?",
             {
                 item_name: res.item,
                 category: res.cat,
@@ -321,7 +322,7 @@ function addProduct() {
                     console.log(err);
                     quit();
                 } else {
-                    console.log(item.affectedRows + " new item added to the inventory.");
+                    console.log("\n" + item.affectedRows + " new item added to the inventory.\n");
                     // re-init
                     init();
                 }
@@ -332,7 +333,7 @@ function addProduct() {
 
 // quit program
 function quit() {
-    console.log("Thanks for managing the products!");
+    console.log("\nThanks for managing the products!");
     // close connection
     connection.end();
     return;
@@ -347,11 +348,6 @@ function printHeader() {
     var price = "Price";
     var amount = "Amount";
     var divider = "";
-    divider = divider.padEnd(5, "-") + " " 
-            + divider.padEnd(26, "-") + " " 
-            + divider.padEnd(26, "-") + " " 
-            + divider.padEnd(16, "-") + " " 
-            + divider.padEnd(10, "-");
     var header = id.padEnd(5, " ") + " " 
                + item.padEnd(26, " ") + " " 
                + cat.padEnd(26, " ") + " " 
@@ -359,7 +355,8 @@ function printHeader() {
                + amount.padEnd(10, " ");
     // print header
     console.log(header);
-    console.log(divider);
+    // print divider
+    console.log(divider.padStart(header.length, "-"));
 }
 
 // print divider
