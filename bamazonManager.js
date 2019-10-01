@@ -34,33 +34,37 @@ function init() {
         }
     ]).then(function(res, err) {
         // throw error if something breaks
-        if (err) throw err;
+        if (err) {
+            // log error and close connection
+            console.log(err);
+            quit();
+        } else {
+            // get the number of the selected choice
+            var option = parseInt(res.select[0]);
 
-        // get the number of the selected choice
-        var option = parseInt(res.select[0]);
-
-        // create a switch
-        switch (option) {
-            case 1:
-                // print inventory
-                showInventory();
-                break;
-            case 2:
-                // print low inventory
-                showLowInventory();
-                break;
-            case 3:
-                // select product to add inventory
-                addInventory();
-                break;
-            case 4:
-                // add a new product
-                addProduct();
-                break;
-            case 5:
-                // quit
-                quit();
-                break;
+            // create a switch
+            switch (option) {
+                case 1:
+                    // print inventory
+                    showInventory();
+                    break;
+                case 2:
+                    // print low inventory
+                    showLowInventory();
+                    break;
+                case 3:
+                    // select product to add inventory
+                    addInventory();
+                    break;
+                case 4:
+                    // add a new product
+                    addProduct();
+                    break;
+                case 5:
+                    // quit
+                    quit();
+                    break;
+            }
         }
     });
 }
@@ -71,7 +75,9 @@ function showInventory() {
     var query = connection.query("SELECT * FROM products", function(err, res) {
         // error stuffs!
         if (err) {
-            console.log(err)
+            // log error and close connection;
+            console.log(err);
+            quit();
         } else {
             // create header string
             var id = "ID";
@@ -79,20 +85,20 @@ function showInventory() {
             var cat = "Category";
             var price = "Price";
             var amount = "Amount";
-            var header = id.padEnd(5, " ") + item.padEnd(26, " ") + cat.padEnd(26, " ") + price.padEnd(11, " ") + amount.padEnd(10, " ")
+            var header = id.padEnd(5, " ") + item.padEnd(26, " ") + cat.padEnd(26, " ") + price.padEnd(16, " ") + amount.padEnd(10, " ")
             // print header
             console.log(header);
-            console.log(divider.padStart(78, "-"));
+            console.log(divider.padStart(83, "-"));
             // check if there are products
             if (res !== undefined) {
                 // print products
                 res.forEach(function(item) {
                     // create formatted string
-                    var string = item.id.padEnd(5, " ") + item.item_name.padEnd(26, " ") + item.category.padEnd(26, " ") + item.price.padEnd(11, " ") + item.quantity.padEnd(10, " ");
+                    var string = String(item.id).padEnd(5, " ") + String(item.item_name).padEnd(26, " ") + String(item.category).padEnd(26, " ") + String(parseFloat(item.price).toFixed(2)).padEnd(16, " ") + String(item.quantity).padEnd(10, " ");
                     console.log(string);
                 })
             }
-            console.log(divider.padStart(78, "-"));
+            console.log(divider.padStart(83, "-"));
             init();
         }
     })
@@ -100,9 +106,7 @@ function showInventory() {
 
 // gets inventory data and prints products that are low
 function showLowInventory() {
-    // connect to database
-
-    // get products
+    // query database
 
     // identify low inventory
 
@@ -119,6 +123,70 @@ function addInventory() {
 // add a new product
 function addProduct() {
     // prompt user for product information
+    inquirer.prompt([
+        {
+            type: "input",
+            message: "Please enter the name of the item:",
+            name: "item"
+        },
+        {
+            type: "input",
+            message: "Please enter the category of the item:",
+            name: "cat"
+        },
+        {
+            type: "input",
+            message: "How much will this item cost per unit?",
+            name: "price",
+            validate: function(input) {
+                // check if input is a float
+                if (isNaN(parseFloat(input).toFixed(2))) {
+                    return "Please enter a correct price amount.";
+                } else {
+                    return true;
+                }
+            }
+        },
+        {
+            type: "input",
+            message: "How many of these are you listing?",
+            name: "amount",
+            validate: function(input) {
+                // check if input is an integer
+                if (isNaN(parseInt(input))) {
+                    return "Please enter a proper amount to list.";
+                } else {
+                    return true;
+                }
+            }
+        }
+    ]).then(function(res, err) {
+        if (err) {
+            // log error and close connection
+            console.log(err);
+            quit();
+        } else {
+            // add product to database
+            var query = connection.query("INSERT INTO products SET ?",
+            {
+                item_name: res.item,
+                category: res.cat,
+                price: res.price,
+                quantity: res.amount
+            },
+            function(err, item) {
+                if (err) {
+                    // log error and close connection
+                    console.log(err);
+                    quit();
+                } else {
+                    console.log(item.affectedRows + " new item added to the inventory.")
+                    // re-init
+                    init();
+                }
+            })
+        }
+    })
 }
 
 // quit program
