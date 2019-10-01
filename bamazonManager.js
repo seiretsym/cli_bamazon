@@ -14,9 +14,6 @@ var connection = mysql.createConnection({
 // connect!
 connection.connect();
 
-// divider
-var divider = "\r\n";
-
 // init program by asking the user to make a choice
 function init() {
     inquirer.prompt([
@@ -79,26 +76,24 @@ function showInventory() {
             console.log(err);
             quit();
         } else {
-            // create header string
-            var id = "ID";
-            var item = "Item";
-            var cat = "Category";
-            var price = "Price";
-            var amount = "Amount";
-            var header = id.padEnd(5, " ") + item.padEnd(26, " ") + cat.padEnd(26, " ") + price.padEnd(16, " ") + amount.padEnd(10, " ")
             // print header
-            console.log(header);
-            console.log(divider.padStart(83, "-"));
+            printHeader();
             // check if there are products
             if (res !== undefined) {
                 // print products
                 res.forEach(function(item) {
                     // create formatted string
-                    var string = String(item.id).padEnd(5, " ") + String(item.item_name).padEnd(26, " ") + String(item.category).padEnd(26, " ") + String(parseFloat(item.price).toFixed(2)).padEnd(16, " ") + String(item.quantity).padEnd(10, " ");
+                    var string = String(item.id).padEnd(6, " ")
+                               + String(item.item_name).padEnd(27, " ") 
+                               + String(item.category).padEnd(27, " ") 
+                               + String(parseFloat(item.price).toFixed(2)).padEnd(17, " ") 
+                               + String(item.quantity).padEnd(10, " ");
                     console.log(string);
                 })
             }
-            console.log(divider.padStart(83, "-"));
+            // print divider
+            printDivider();
+            // re-init
             init();
         }
     })
@@ -107,10 +102,28 @@ function showInventory() {
 // gets inventory data and prints products that are low
 function showLowInventory() {
     // query database
+    var query = connection.query("SELECT ? FROM products",
+    {
+        quantity: 0
+    },
+    function(err, res) {
+        if (err) {
+            // log error and close connection
+            console.log(err);
+            quit();
+        } else {
+            if (res === undefined) {
+                console.log("You have no items in inventory that are low.")
+                // re-init
+                init()
+            } else {
+                // print low inventory products
 
-    // identify low inventory
-
-    // print low inventory products
+                // re-init
+                init();
+            }
+        }
+    })
 }
 
 // add inventory to a product
@@ -180,7 +193,7 @@ function addProduct() {
                     console.log(err);
                     quit();
                 } else {
-                    console.log(item.affectedRows + " new item added to the inventory.")
+                    console.log(item.affectedRows + " new item added to the inventory.");
                     // re-init
                     init();
                 }
@@ -191,10 +204,41 @@ function addProduct() {
 
 // quit program
 function quit() {
-    console.log("Thanks for managing the products!")
+    console.log("Thanks for managing the products!");
     // close connection
     connection.end();
     return;
+}
+
+// print header
+function printHeader() {
+    // create header string
+    var id = "ID";
+    var item = "Item";
+    var cat = "Category";
+    var price = "Price";
+    var amount = "Amount";
+    var divider = "";
+    divider = divider.padEnd(5, "-") + " " 
+            + divider.padEnd(26, "-") + " " 
+            + divider.padEnd(26, "-") + " " 
+            + divider.padEnd(16, "-") + " " 
+            + divider.padEnd(10, "-");
+    var header = id.padEnd(5, " ") + " " 
+               + item.padEnd(26, " ") + " " 
+               + cat.padEnd(26, " ") + " " 
+               + price.padEnd(16, " ") + " " 
+               + amount.padEnd(10, " ");
+    // print header
+    console.log(header);
+    console.log(divider);
+}
+
+// print divider
+function printDivider() {
+    var divider = "\n";
+    var dividerLength = 88;
+    console.log(divider.padStart(dividerLength, "-"));
 }
 
 init();
