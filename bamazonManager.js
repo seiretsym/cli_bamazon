@@ -11,6 +11,12 @@ var connection = mysql.createConnection({
     database: "bamazonDB"
 })
 
+// connect!
+connection.connect();
+
+// divider
+var divider = "\r\n";
+
 // init program by asking the user to make a choice
 function init() {
     inquirer.prompt([
@@ -61,11 +67,35 @@ function init() {
 
 // gets inventory data and prints it
 function showInventory() {
-    // connect to database
-
     // get products
-
-    // print products
+    var query = connection.query("SELECT * FROM products", function(err, res) {
+        // error stuffs!
+        if (err) {
+            console.log(err)
+        } else {
+            // create header string
+            var id = "ID";
+            var item = "Item";
+            var cat = "Category";
+            var price = "Price";
+            var amount = "Amount";
+            var header = id.padEnd(5, " ") + item.padEnd(26, " ") + cat.padEnd(26, " ") + price.padEnd(11, " ") + amount.padEnd(10, " ")
+            // print header
+            console.log(header);
+            console.log(divider.padStart(78, "-"));
+            // check if there are products
+            if (res !== undefined) {
+                // print products
+                res.forEach(function(item) {
+                    // create formatted string
+                    var string = item.id.padEnd(5, " ") + item.item_name.padEnd(26, " ") + item.category.padEnd(26, " ") + item.price.padEnd(11, " ") + item.quantity.padEnd(10, " ");
+                    console.log(string);
+                })
+            }
+            console.log(divider.padStart(78, "-"));
+            init();
+        }
+    })
 }
 
 // gets inventory data and prints products that are low
@@ -94,6 +124,8 @@ function addProduct() {
 // quit program
 function quit() {
     console.log("Thanks for managing the products!")
+    // close connection
+    connection.end();
     return;
 }
 
