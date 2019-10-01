@@ -142,9 +142,123 @@ function showLowInventory() {
 
 // add inventory to a product
 function addInventory() {
-    // show list of products
+    // show list of items
+    var query = connection.query("SELECT * FROM products", function(err, res) {
+        // error stuffs!
+        if (err) {
+            // log error and close connection;
+            console.log(err);
+            quit();
+        } else {
+            // print header
+            printHeader();
+            // check if there are products
+            if (res !== undefined) {
+                // print products
+                res.forEach(function(item) {
+                    // create formatted string
+                    var string = String(item.id).padEnd(6, " ")
+                               + String(item.item_name).padEnd(27, " ") 
+                               + String(item.category).padEnd(27, " ") 
+                               + String(parseFloat(item.price).toFixed(2)).padEnd(17, " ") 
+                               + String(item.quantity).padEnd(10, " ");
+                    console.log(string);
+                })
+            }
+            // print divider
+            printDivider();
+            // re-init
+        }
 
-    // add amount into inventory from input
+        inquirer.prompt([
+            {
+                type: "input",
+                message: "Enter the ID of the item you want to restock:",
+                name: "id",
+                validate: function(input) {
+                    if (isNaN(input)) {
+                        return "Please enter the ID number.";
+                    } else {
+                        return true;
+                    }
+                }
+            }
+        ]).then(function(res, err) {        
+            if (err) {
+                // log error and disconnect
+                console.log(err);
+                quit()
+            } else {
+                // check if item exists
+                var query = connection.query("SELECT * FROM products WHERE ?",
+                {
+                    id: res.id
+                },
+                function(qErr, qRes) {
+                    if (qErr) {
+                        // log error and disconnect
+                        console.log(qErr);
+                        quit()
+                    }
+                    // item doesn't exist so...
+                    else if (qRes.length < 1) {
+                        // tell them
+                        console.log("Cannot find an item with the ID: " + res.id)
+                        // re-init
+                        init()
+                    } else {
+                        // ask for input to replenish the stock
+                        inquirer.prompt([
+                            {
+                                type: "input",
+                                message: "How many would you like to add?",
+                                name: "amount",
+                                validate: function(input) {
+                                    // check if it's a number
+                                    if (isNaN(input)) {
+                                        return "Please enter a valid number";
+                                    } else {
+                                        return true;
+                                    }
+                                }
+                            }
+                        ]).then(function(iRes, iErr) {
+                            if (iErr) {
+                                // log error and disconnect
+                                console.log(iErr);
+                                quit();
+                            } else {
+                                // add new amount to current amount
+                                var newAmount = parseInt(qRes[0].quantity) + parseInt(iRes.amount);
+                                // push to database
+                                var query = connection.query("UPDATE products SET ? WHERE ?",
+                                [
+                                    {
+                                        quantity: newAmount
+                                    },
+                                    {
+                                        id: res.id
+                                    }
+                                ],
+                                function(err2, res2) {
+                                    if (err2) {
+                                        // log error and disconnect
+                                        console.log(err2);
+                                        quit();
+                                    } else {
+                                        // let them know
+                                        console.log(res2.affectedRows + " item quantity updated!");
+                                        // re-init
+                                        init();
+                                    }
+                                })
+                            }
+                        })
+                    }
+                })
+            }
+        })
+    });
 }
 
 // add a new product
