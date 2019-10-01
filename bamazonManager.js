@@ -102,7 +102,7 @@ function showInventory() {
 // gets inventory data and prints products that are low
 function showLowInventory() {
     // query database
-    var query = connection.query("SELECT ? FROM products",
+    var query = connection.query("SELECT * FROM products WHERE ?",
     {
         quantity: 0
     },
@@ -112,13 +112,27 @@ function showLowInventory() {
             console.log(err);
             quit();
         } else {
-            if (res === undefined) {
+            // check if there are any items with quantity 0
+            if (res.length < 1) {
+                // tell user nothing is low
                 console.log("You have no items in inventory that are low.")
                 // re-init
                 init()
             } else {
+                // print header
+                printHeader()
                 // print low inventory products
-
+                res.forEach(function(item) {
+                    // create formatted string
+                    var string = String(item.id).padEnd(6, " ")
+                               + String(item.item_name).padEnd(27, " ") 
+                               + String(item.category).padEnd(27, " ") 
+                               + String(parseFloat(item.price).toFixed(2)).padEnd(17, " ") 
+                               + String(item.quantity).padEnd(10, " ");
+                    console.log(string);
+                })
+                // print divider
+                printDivider()
                 // re-init
                 init();
             }
