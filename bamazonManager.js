@@ -87,7 +87,8 @@ function showInventory() {
                                + String(item.item_name).padEnd(27, " ") 
                                + String(item.category).padEnd(27, " ") 
                                + String(parseFloat(item.price).toFixed(2)).padEnd(17, " ") 
-                               + String(item.quantity).padEnd(10, " ");
+                               + String(item.quantity).padEnd(11, " ")
+                               + String(item.items_sold).padEnd(10, " ");
                     console.log(string);
                 })
             }
@@ -128,7 +129,8 @@ function showLowInventory() {
                                + String(item.item_name).padEnd(27, " ") 
                                + String(item.category).padEnd(27, " ") 
                                + String(parseFloat(item.price).toFixed(2)).padEnd(17, " ") 
-                               + String(item.quantity).padEnd(10, " ");
+                               + String(item.quantity).padEnd(11, " ")
+                               + String(item.items_sold).padEnd(10, " ");
                     console.log(string);
                 })
                 // print divider
@@ -161,7 +163,8 @@ function addInventory() {
                                + String(item.item_name).padEnd(27, " ") 
                                + String(item.category).padEnd(27, " ") 
                                + String(parseFloat(item.price).toFixed(2)).padEnd(17, " ") 
-                               + String(item.quantity).padEnd(10, " ");
+                               + String(item.quantity).padEnd(11, " ")
+                               + String(item.items_sold).padEnd(10, " ");
                     console.log(string);
                 })
             }
@@ -314,7 +317,8 @@ function addProduct() {
                 item_name: res.item,
                 category: res.cat,
                 price: res.price,
-                quantity: res.amount
+                quantity: res.amount,
+                items_sold: 0
             },
             function(err, item) {
                 if (err) {
@@ -346,23 +350,30 @@ function printHeader() {
     var item = "Item";
     var cat = "Category";
     var price = "Price";
-    var amount = "Amount";
-    var divider = "";
+    var amount = "Available";
+    var sold = "Total Sold";
+    var divider = String(" ").padStart(6, "-") +
+                  String(" ").padStart(27, "-") +
+                  String(" ").padStart(27, "-") +
+                  String(" ").padStart(17, "-") +
+                  String(" ").padStart(11, "-") +
+                  String("").padStart(10, "-");
     var header = id.padEnd(5, " ") + " " 
                + item.padEnd(26, " ") + " " 
                + cat.padEnd(26, " ") + " " 
                + price.padEnd(16, " ") + " " 
-               + amount.padEnd(10, " ");
+               + amount.padEnd(10, " ") + " "
+               + sold.padEnd(10, " ");
     // print header
     console.log(header);
     // print divider
-    console.log(divider.padStart(header.length, "-"));
+    console.log(divider);
 }
 
 // print divider
 function printDivider() {
     var divider = "\n";
-    var dividerLength = 88;
+    var dividerLength = 99;
     console.log(divider.padStart(dividerLength, "-"));
 }
 
