@@ -5,13 +5,13 @@ CREATE DATABASE bamazonDB;
 USE bamazonDB;
 
 CREATE TABLE products (
-    id INT NOT NULL AUTO_INCREMENT,
+    item_id INT NOT NULL AUTO_INCREMENT,
     item_name VARCHAR(25) NULL,
     category VARCHAR(25) NULL,
     price DECIMAL(10,2) NULL,
     quantity INTEGER(10) NULL,
     items_sold INTEGER(10) DEFAULT 0,
-    PRIMARY KEY (id)
+    PRIMARY KEY (item_id)
 );
 
 INSERT INTO products (item_name, category, price, quantity)
@@ -42,9 +42,10 @@ INSERT INTO products (item_name, category, price, quantity)
 VALUES ("Baseball Cap", "apparel", 500, 25);
 
 CREATE TABLE departments (
-    id INT NOT NULL AUTO_INCREMENT,
+    dep_id INT NOT NULL AUTO_INCREMENT,
     department_name VARCHAR(25) NULL,
     overhead_costs DECIMAL(10,2) DEFAULT 0.00,
+    PRIMARY KEY (dep_id)
 );
 
 INSERT INTO departments (department_name, overhead_costs)
