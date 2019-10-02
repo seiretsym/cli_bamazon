@@ -14,7 +14,30 @@ var connection = mysql.createConnection({
 // connect!
 connection.connect();
 
+// print inventory
+function printInvetory() {
+    // query db for info
+    connection.query("SELECT * FROM products", function(err, res) {
+        if (err) {
+            console.log(err);
+            quit();
+        }
+    }
+}
+
+// print the overhead stats
 function printOverhead() {
     // query db for info
-    connection.query("SELECT * FROM departments INNER JOIN products ON department_name = category")
+    connection.query("SELECT * FROM departments")
+}
+
+// get the department sales and returns profits
+function returnProfitByDep(department) {
+
+}
+
+// quit program
+function quit() {
+    console.log("\nThanks for supervising the store!")
+    connection.end();
 }
