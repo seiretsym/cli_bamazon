@@ -116,11 +116,12 @@ function printOverhead() {
             console.log(header);
             console.log(divider);
 
-            // create timer to deal with async issues
+            // set timer variable to combat asynchronous inquirer
             var timer = 0;
             // iterate through departments
-            res.forEach(function(object) {
-                timer += 50;
+            res.map(function(object) {
+                // increment timer per object
+                timer += 25;
                 // get profit by department name
                 returnProfitByDep(object.department_name, function(res) {
                     // create string
@@ -134,10 +135,10 @@ function printOverhead() {
                     console.log(string);
                 })
             })
-            // re-init with setTimeout to deal with async
+            // reinit after timeout
             setTimeout(function() {
                 printDivider(84);
-                init()
+                init();
             }, timer);
         }
     })
@@ -153,7 +154,9 @@ function returnProfitByDep(department, callback) {
             if (err) {
                 console.log(err);
                 quit();
-            } else {
+            }
+            // account for departments with products
+            else if (res.length > 0) {
                 var profit = 0 - parseFloat(res[0].overhead_costs).toFixed(2);
                 var items = 0;
                 res.forEach(function(item) {
@@ -161,14 +164,70 @@ function returnProfitByDep(department, callback) {
                     items += parseInt(item.items_sold);
                 })
                 return callback([items, profit])
-            }    
+            }
+            // account for departments with no products 
+            else {
+                connection.query("SELECT * FROM departments WHERE ?",
+                {
+                    department_name: department
+                }, function(err, res) {
+                    if (err) {
+                        console.log(err);
+                        quit()
+                    } else {
+                        var profit = 0 - parseFloat(res[0].overhead_costs).toFixed(2);
+                        return callback([0, profit]);
+                    }
+                })
+            }
         }
     )
 }
 
 // add a new department
 function addDepartment() {
-
+    // prompt user for department info
+    inquirer.prompt([
+        {
+            type: "input",
+            message: "Please enter the name of the new department:",
+            name: "name"
+        },
+        {
+            type: "input",
+            message: "Please enter the overhead cost of this department:",
+            name: "cost",
+            validate: function(input) {
+                if (isNaN(input)) {
+                    return "Please enter a valid amount!";
+                } else {
+                    return true;
+                }
+            }
+        }
+    ]).then(function(res, err) {
+        if (err) {
+            console.log(err);
+            quit()
+        } else {
+            // generate query string
+            var query = "INSERT INTO departments (department_name, overhead_costs) VALUES ('"
+                      + res.name + "'," + res.cost + ")";
+            // let's add that department to database
+            connection.query(query, function(err) {
+                if (err) {
+                    // womp-womp
+                    console.log(err);
+                    quit();
+                } else {
+                    // success!
+                    console.log("\nYou've successfully added a new department!");
+                    // re-init
+                    init();
+                }
+            })
+        }
+    })
 }
 
 // quit program
