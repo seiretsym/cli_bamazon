@@ -53,9 +53,10 @@ function printInventory() {
             })
             // print bottom divider
             printDivider(105)
+            // init
+            init();
         }
     })
-    init();
 }
 
 // prompt user for input
@@ -63,7 +64,7 @@ function init() {
     inquirer.prompt(
         {
             type: "list",
-            message: "What would you like to do?"
+            message: "What would you like to do?",
             choices: ["View Department Overhead", "Add New Department", "Quit"],
             name: "choice"
         }
@@ -118,27 +119,48 @@ function printOverhead() {
             // iterate through departments
             res.forEach(function(object) {
                 // get profit by department name
-                var profit = returnProfitByDep(object.department.name);
+                returnProfitByDep(object.department_name, function(res) {
+                    // create string
+                    var string = String(object.dep_id).padEnd(6, " ") +
+                                String(object.department_name).padEnd(27, " ") +
+                                String(object.overhead_costs).padEnd(17, " ") +
+                                String(res[0]).padEnd(17, " ") +
+                                String(res[1]).padEnd(17, " ");
 
-                // create string
-                var string = String(object.dep_id).padEnd(6, " ") +
-                             String(object.department_name).padEnd(27, " ") +
-                             String(object.overhead_costs).padEnd(17, " ") +
-                             String(profit.items_sold).padEnd(17, " ") +
-                             String(profit.amount).padEnd(17, " ");
-
-                // print it
-                console.log(string);
+                    // print it
+                    console.log(string);
+                })
             })
+            // re-init with timeout to deal with async
+            setTimeout(function() {
+                printDivider(84);
+                init()
+            }, 200);
         }
     })
-    // re-init
-    init();
 }
 
 // get the department sales and returns profits
-function returnProfitByDep(department) {
-
+function returnProfitByDep(department, callback) {
+    // read database for department items
+    connection.query("SELECT * FROM departments INNER JOIN products ON department_name = category WHERE ?",
+        {
+            department_name: department
+        }, function(err, res) {
+            if (err) {
+                console.log(err);
+                quit();
+            } else {
+                var profit = 0 - parseFloat(res[0].overhead_costs).toFixed(2);
+                var items = 0;
+                res.forEach(function(item) {
+                    profit += parseFloat(item.price).toFixed(2) * parseFloat(item.items_sold).toFixed(2);
+                    items += parseInt(item.items_sold);
+                })
+                return callback([items, profit])
+            }    
+        }
+    )
 }
 
 // add a new department
@@ -159,4 +181,4 @@ function printDivider(length) {
     console.log(divider.padStart(dividerLength, "-"));
 }
 
-init();
+printInventory();
