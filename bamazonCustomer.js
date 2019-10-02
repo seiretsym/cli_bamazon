@@ -141,7 +141,7 @@ function closePurchase(itemid) {
             quit();
         } else {
             // check if amount is available
-            connection.query("SELECT * FROM products WHERE ?", {id: itemid}, function(err, res) {
+            connection.query("SELECT * FROM products WHERE ?", {item_id: itemid}, function(err, res) {
                 if (err) {
                     console.log(err);
                     quit()
@@ -157,7 +157,7 @@ function closePurchase(itemid) {
                                 items_sold: newSold
                             },
                             {
-                                id: itemid
+                                item_id: itemid
                             }
                         ])
                         // re-init
