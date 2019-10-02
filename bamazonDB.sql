@@ -40,3 +40,27 @@ VALUES ("Lipstick", "beauty supplies", 200, 10);
 
 INSERT INTO products (item_name, category, price, quantity)
 VALUES ("Baseball Cap", "apparel", 500, 25);
+
+CREATE TABLE departments (
+    id INT NOT NULL AUTO_INCREMENT,
+    department_name VARCHAR(25) NULL,
+    overhead_costs DECIMAL(10,2) DEFAULT 0.00,
+);
+
+INSERT INTO departments (department_name, overhead_costs)
+VALUES ("consumable", 100000);
+
+INSERT INTO departments (department_name, overhead_costs)
+
+VALUES ("pokéball", 100000);
+INSERT INTO departments (department_name, overhead_costs)
+VALUES ("fishing rod", 5000);
+
+INSERT INTO departments (department_name, overhead_costs)
+VALUES ("tm", 50000);
+
+INSERT INTO departments (department_name, overhead_costs)
+VALUES ("beauty supplies", 250000);
+
+INSERT INTO departments (department_name, overhead_costs)
+VALUES ("apparel", 25000);
