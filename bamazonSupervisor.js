@@ -94,7 +94,26 @@ function init() {
 // print the overhead stats
 function printOverhead() {
     // query db for info
-    connection.query("SELECT * FROM departments")
+    connection.query("SELECT * FROM departments", function(err, res) {
+        if (err) {
+            console.log(err);
+            quit();
+        } else {
+            // create header
+
+            // create divider
+
+            // print them
+
+            // iterate through departments
+            res.forEach(function(object) {
+                var profit = returnProfitByDep(object.department.name);
+                // create string
+            })
+        }
+    })
+    // re-init
+    init();
 }
 
 // get the department sales and returns profits
