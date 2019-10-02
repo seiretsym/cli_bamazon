@@ -33,7 +33,7 @@ function showInventory() {
                 // print products
                 res.forEach(function(item) {
                     // create formatted string
-                    var string = String(item.id).padEnd(6, " ")
+                    var string = String(item.item_id).padEnd(6, " ")
                                + String(item.item_name).padEnd(27, " ") 
                                + String(item.category).padEnd(27, " ") 
                                + String(parseFloat(item.price).toFixed(2)).padEnd(17, " ") 

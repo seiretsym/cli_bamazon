@@ -83,7 +83,7 @@ function showInventory() {
                 // print products
                 res.forEach(function(item) {
                     // create formatted string
-                    var string = String(item.id).padEnd(6, " ")
+                    var string = String(item.item_id).padEnd(6, " ")
                                + String(item.item_name).padEnd(27, " ") 
                                + String(item.category).padEnd(27, " ") 
                                + String(parseFloat(item.price).toFixed(2)).padEnd(17, " ") 
@@ -125,7 +125,7 @@ function showLowInventory() {
                 // print low inventory products
                 res.forEach(function(item) {
                     // create formatted string
-                    var string = String(item.id).padEnd(6, " ")
+                    var string = String(item.item_id).padEnd(6, " ")
                                + String(item.item_name).padEnd(27, " ") 
                                + String(item.category).padEnd(27, " ") 
                                + String(parseFloat(item.price).toFixed(2)).padEnd(17, " ") 
@@ -159,7 +159,7 @@ function addInventory() {
                 // print products
                 res.forEach(function(item) {
                     // create formatted string
-                    var string = String(item.id).padEnd(6, " ")
+                    var string = String(item.item_id).padEnd(6, " ")
                                + String(item.item_name).padEnd(27, " ") 
                                + String(item.category).padEnd(27, " ") 
                                + String(parseFloat(item.price).toFixed(2)).padEnd(17, " ") 
@@ -186,7 +186,7 @@ function addInventory() {
                         return true;
                     }
                 }
-            }
+            },
         ]).then(function(res, err) {        
             if (err) {
                 // log error and disconnect
@@ -196,7 +196,7 @@ function addInventory() {
                 // check if item exists
                 connection.query("SELECT * FROM products WHERE ?",
                 {
-                    id: res.id
+                    item_id: res.id
                 },
                 function(qErr, qRes) {
                     if (qErr) {
@@ -241,7 +241,7 @@ function addInventory() {
                                         quantity: newAmount
                                     },
                                     {
-                                        id: res.id
+                                        item_id: res.id
                                     }
                                 ],
                                 function(err2, res2) {

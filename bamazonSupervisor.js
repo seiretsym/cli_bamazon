@@ -13,3 +13,8 @@ var connection = mysql.createConnection({
 
 // connect!
 connection.connect();
+
+function printOverhead() {
+    // query db for info
+    connection.query("SELECT * FROM departments INNER JOIN products ON department_name = category")
+}
