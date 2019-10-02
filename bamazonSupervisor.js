@@ -100,15 +100,35 @@ function printOverhead() {
             quit();
         } else {
             // create header
-
+            var header = String("ID").padEnd(6, " ") +
+                         String("Department Name").padEnd(27, " ") +
+                         String("Overhead").padEnd(17, " ") +
+                         String("Items Sold").padEnd(17, " ") +
+                         String("Profit").padEnd(17, " ");
             // create divider
-
+            var divider = String(" ").padStart(6, "-") +
+                          String(" ").padStart(27, "-") +
+                          String(" ").padStart(17, "-") +
+                          String(" ").padStart(17, "-") +
+                          String(" ").padStart(17, "-");
             // print them
+            console.log(header);
+            console.log(divider);
 
             // iterate through departments
             res.forEach(function(object) {
+                // get profit by department name
                 var profit = returnProfitByDep(object.department.name);
+
                 // create string
+                var string = String(object.dep_id).padEnd(6, " ") +
+                             String(object.department_name).padEnd(27, " ") +
+                             String(object.overhead_costs).padEnd(17, " ") +
+                             String(profit.items_sold).padEnd(17, " ") +
+                             String(profit.amount).padEnd(17, " ");
+
+                // print it
+                console.log(string);
             })
         }
     })
