@@ -116,8 +116,11 @@ function printOverhead() {
             console.log(header);
             console.log(divider);
 
+            // create timer to deal with async issues
+            var timer = 0;
             // iterate through departments
             res.forEach(function(object) {
+                timer += 50;
                 // get profit by department name
                 returnProfitByDep(object.department_name, function(res) {
                     // create string
@@ -131,11 +134,11 @@ function printOverhead() {
                     console.log(string);
                 })
             })
-            // re-init with timeout to deal with async
+            // re-init with setTimeout to deal with async
             setTimeout(function() {
                 printDivider(84);
                 init()
-            }, 200);
+            }, timer);
         }
     })
 }
