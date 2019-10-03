@@ -77,7 +77,7 @@ function init() {
             switch (res.choice) {
                 case "View Department Overhead":
                     // print the department overhead
-                    printOverhead()
+                    printOverhead();
                     break;
                 case "Add New Department":
                     // add a new department
@@ -116,40 +116,42 @@ function printOverhead() {
             console.log(header);
             console.log(divider);
 
-            // set timer variable to combat asynchronous inquirer
-            var timer = 0;
-            // iterate through departments
-            res.map(function(object) {
-                // increment timer per object
-                timer += 25;
-                // get profit by department name
-                returnProfitByDep(object.department_name, function(res) {
-                    // create string
-                    var string = String(object.dep_id).padEnd(6, " ") +
-                                String(object.department_name).padEnd(27, " ") +
-                                String(object.overhead_costs).padEnd(17, " ") +
-                                String(res[0]).padEnd(17, " ") +
-                                String(res[1]).padEnd(17, " ");
+            // iterate through departments using a promise so it waits to finish
+            Promise.all(res.map(function(object) {
+                var promise = new Promise(function(resolve) {
+                    // get profit by department name
+                    returnProfitByDep(object, function(res) {
+                        // create string
+                        var string = String(object.dep_id).padEnd(6, " ") +
+                                     String(object.department_name).padEnd(27, " ") +
+                                     String(object.overhead_costs.toFixed(2)).padEnd(17, " ") +
+                                     String(res[0]).padEnd(17, " ") +
+                                     String(res[1].toFixed(2)).padEnd(17, " ");
 
-                    // print it
-                    console.log(string);
+                        // resolve promise
+                        resolve(string)
+                    })
                 })
-            })
-            // reinit after timeout
-            setTimeout(function() {
+                // return promise resolution then...
+                return promise.then(function(string) {
+                    // print the string
+                    console.log(string);
+                });
+            })).then(function() {
+                // print divider and re-init after Promise.all has resolved
                 printDivider(84);
                 init();
-            }, timer);
+            })
         }
     })
 }
 
 // get the department sales and returns profits
-function returnProfitByDep(department, callback) {
+function returnProfitByDep(object, callback) {
     // read database for department items
     connection.query("SELECT * FROM departments INNER JOIN products ON department_name = category WHERE ?",
         {
-            department_name: department
+            department_name: object.department_name
         }, function(err, res) {
             if (err) {
                 console.log(err);
@@ -159,24 +161,24 @@ function returnProfitByDep(department, callback) {
             else if (res.length > 0) {
                 var profit = 0 - parseFloat(res[0].overhead_costs).toFixed(2);
                 var items = 0;
-                res.forEach(function(item) {
+                res.map(function(item) {
                     profit += parseFloat(item.price).toFixed(2) * parseFloat(item.items_sold).toFixed(2);
                     items += parseInt(item.items_sold);
                 })
-                return callback([items, profit])
+                callback([items, profit]);
             }
             // account for departments with no products 
             else {
                 connection.query("SELECT * FROM departments WHERE ?",
                 {
-                    department_name: department
+                    department_name: object.department_name
                 }, function(err, res) {
                     if (err) {
                         console.log(err);
                         quit()
                     } else {
                         var profit = 0 - parseFloat(res[0].overhead_costs).toFixed(2);
-                        return callback([0, profit]);
+                        callback([0, profit])
                     }
                 })
             }
@@ -239,8 +241,7 @@ function quit() {
 // print divider
 function printDivider(length) {
     var divider = "\n";
-    var dividerLength = length;
-    console.log(divider.padStart(dividerLength, "-"));
+    console.log(divider.padStart(length, "-"));
 }
 
 printInventory();
