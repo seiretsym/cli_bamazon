@@ -193,14 +193,21 @@ function addDepartment() {
         {
             type: "input",
             message: "Please enter the name of the new department:",
-            name: "name"
+            name: "name",
+            validate: function(input) {
+                if (input === "") {
+                    return "Department needs a name, so give it one!";
+                } else {
+                    return true;
+                }
+            }
         },
         {
             type: "input",
             message: "Please enter the overhead cost of this department:",
             name: "cost",
             validate: function(input) {
-                if (isNaN(input)) {
+                if (isNaN(input) || parseInt(input) <= 0 || input === "") {
                     return "Please enter a valid amount!";
                 } else {
                     return true;

@@ -180,7 +180,7 @@ function addInventory() {
                 message: "Enter the ID of the item you want to restock:",
                 name: "id",
                 validate: function(input) {
-                    if (isNaN(input)) {
+                    if (isNaN(input) || input === "") {
                         return "Please enter the ID number.";
                     } else {
                         return true;
@@ -219,7 +219,7 @@ function addInventory() {
                                 name: "amount",
                                 validate: function(input) {
                                     // check if it's a number
-                                    if (isNaN(input)) {
+                                    if (isNaN(input) || parseInt(input) <= 0 || input == "") {
                                         return "Please enter a valid number";
                                     } else {
                                         return true;
@@ -272,12 +272,25 @@ function addProduct() {
         {
             type: "input",
             message: "Please enter the name of the item:",
-            name: "item"
+            name: "item",
+            validate: function(input) {
+                if (input === "") {
+                    return "Item needs a name, so give it one!";
+                } else {
+                    return true;
+                }
+            }
         },
         {
             type: "input",
             message: "Please enter the category of the item:",
-            name: "cat"
+            name: "cat",
+            validate: function(input) {
+                if (input === "") {
+                    return "Item needs a name, so give it one!";
+                } else {
+                    return true;
+                }
         },
         {
             type: "input",
@@ -285,7 +298,7 @@ function addProduct() {
             name: "price",
             validate: function(input) {
                 // check if input is a float
-                if (isNaN(parseFloat(input).toFixed(2))) {
+                if (isNaN(parseFloat(input)) || parseFloat(input) < 1 || input === "") {
                     return "Please enter a correct price amount.";
                 } else {
                     return true;
@@ -298,7 +311,7 @@ function addProduct() {
             name: "amount",
             validate: function(input) {
                 // check if input is an integer
-                if (isNaN(parseInt(input))) {
+                if (isNaN(parseInt(input)) || parseInt(input) < 1 || input === "") {
                     return "Please enter a proper amount to list.";
                 } else {
                     return true;

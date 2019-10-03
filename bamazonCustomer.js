@@ -48,7 +48,6 @@ function showInventory() {
             beginPurchase(items);
         }
     })
-    
 }
 
 
@@ -128,6 +127,10 @@ function closePurchase(itemid) {
                     return true;
                 } else if (input.toLowerCase() !== "q" && isNaN(input)) {
                     return "Please enter a correct Item ID";
+                } else if (parseInt(input) === 0) {
+                    return "Yes, I'd like to purchase 0 derps too. ";
+                } else if (parseInt(input) < 0) {
+                    return "Sorry. We're not buying your products.";
                 } else {
                     return true;
                 }

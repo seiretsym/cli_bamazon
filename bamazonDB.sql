@@ -41,6 +41,9 @@ VALUES ("Lipstick", "beauty supplies", 200, 10);
 INSERT INTO products (item_name, category, price, quantity)
 VALUES ("Baseball Cap", "apparel", 500, 25);
 
+INSERT INTO products (item_name, category, price, quantity)
+VALUES ("Pikachu Beanie", "apparel", 5000, 50);
+
 CREATE TABLE departments (
     dep_id INT NOT NULL AUTO_INCREMENT,
     department_name VARCHAR(25) NULL,
