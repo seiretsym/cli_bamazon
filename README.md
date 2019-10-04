@@ -1,14 +1,21 @@
 # CLI Bamazon
+**Technologies Used:** Node.js, Javascript, MySQL, Git, GitHub, VSCode
 
 ## Summary
 A series of programs written in javascript to run on node. They simulate a store from three perspectives: customer, manager, supervisor. Each program utilizes the same database to read/write/modify information. 
 
-### **Highlights:**
+## Highlights:
 - Node.js
 - MySQL
 - Promise
 - Formatting Strings
 - Custom Callback Function
+
+## Installation Guide
+- Clone this Repository to your computer
+- Import bamazonDB.sql to your database (MySQL recommended)
+- Run npm install inside this folder's directory to install the dependencies
+- Then simply run the applications in terminal/console: `node bamazonCustomer.js`
 
 ## Dependencies
 - inquirer
@@ -22,9 +29,9 @@ A series of programs written in javascript to run on node. They simulate a store
 - Learned to use Promises to deal with asynchronous issues
 
 ## Demo Videos
-bamazonCustomer: https://youtu.be/HMUMCm5gi7c
-bamazonManager: https://youtu.be/Fv-6ZAFtLU4
-bamazonSupervisor: https://youtu.be/CHumTUBYQd8
+- bamazonCustomer: https://youtu.be/HMUMCm5gi7c
+- bamazonManager: https://youtu.be/Fv-6ZAFtLU4
+- bamazonSupervisor: https://youtu.be/CHumTUBYQd8
 
 ## Code Snippets
 This snippet shows the usage of String.padEnd and String.padStart to format strings for a legibly enhanced output
@@ -161,13 +168,6 @@ Promise.all(res.map(function(object) {
   init();
 })
 ```
-## Technologies Used
-- Node.js
-- Javascript
-- MySQL
-- Git
-- GitHub
-- VSCode
 
 ## Links
 LinkedIn: https://www.linkedin.com/in/kerwinhy/<br>
