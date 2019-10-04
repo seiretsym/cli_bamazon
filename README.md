@@ -28,11 +28,15 @@ A series of programs written in javascript to run on node. They simulate a store
 - Learned to read/write from/to a database using mysql
 - Learned to use Promises to deal with asynchronous issues
 
-## Demo Videos
-- bamazonCustomer: https://youtu.be/HMUMCm5gi7c
-- bamazonManager: https://youtu.be/Fv-6ZAFtLU4
-- bamazonSupervisor: https://youtu.be/CHumTUBYQd8
+## Demo Gifs
+bamazonCustomer
+![bamazonCustomer](bamazonCustomer.gif)
 
+bamazonManager
+![bamazonManager](bamazonManager.gif)
+
+bamazonSupervisor
+![bamazonSupervisor](bamazonSupervisor.gif)
 ## Code Snippets
 This snippet shows the usage of String.padEnd and String.padStart to format strings for a legibly enhanced output
 
@@ -172,3 +176,8 @@ Promise.all(res.map(function(object) {
 ## Links
 LinkedIn: https://www.linkedin.com/in/kerwinhy/<br>
 GitHub: https://github.com/seiretsym<br>
+
+## Demo Videos
+- bamazonCustomer: https://youtu.be/HMUMCm5gi7c
+- bamazonManager: https://youtu.be/Fv-6ZAFtLU4
+- bamazonSupervisor: https://youtu.be/CHumTUBYQd8
