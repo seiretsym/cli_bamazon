@@ -21,8 +21,10 @@ A series of programs written in javascript to run on node. They simulate a store
 - Learned to read/write from/to a database using mysql
 - Learned to use Promises to deal with asynchronous issues
 
-## Demo Video
-Demo: [put a link here, Kerwin]
+## Demo Videos
+bamazonCustomer: https://youtu.be/HMUMCm5gi7c
+bamazonManager: https://youtu.be/Fv-6ZAFtLU4
+bamazonSupervisor: https://youtu.be/CHumTUBYQd8
 
 ## Code Snippets
 This snippet shows the usage of String.padEnd and String.padStart to format strings for a legibly enhanced output

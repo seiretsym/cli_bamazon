@@ -291,6 +291,7 @@ function addProduct() {
                 } else {
                     return true;
                 }
+            }
         },
         {
             type: "input",
