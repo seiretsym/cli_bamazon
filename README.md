@@ -29,13 +29,13 @@ A series of programs written in javascript to run on node. They simulate a store
 - Learned to use Promises to deal with asynchronous issues
 
 ## Demo Gifs
-bamazonCustomer
+bamazonCustomer<br>
 ![bamazonCustomer](bamazonCustomer.gif)
 
-bamazonManager
+bamazonManager<br>
 ![bamazonManager](bamazonManager.gif)
 
-bamazonSupervisor
+bamazonSupervisor<br>
 ![bamazonSupervisor](bamazonSupervisor.gif)
 ## Code Snippets
 This snippet shows the usage of String.padEnd and String.padStart to format strings for a legibly enhanced output
